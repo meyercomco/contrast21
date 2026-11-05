@@ -9,6 +9,22 @@ snaps to contrast safe colors.
 Built with React and Tauri, it runs as a browser interface or a desktop app.
 Your saved colors stay on your device; no account or server is required.
 
+## Import My Colors
+
+In **My Colors**, enter one `color name: #hex` per line, then select **Import**:
+
+```text
+Primary Blue: #005A9C
+Ink: #1C1917
+Copper: #B86A32
+```
+
+Names may contain spaces. Spaces around names, colons, and color values are
+trimmed. You can also paste copied Harmony palette values such as
+`--foreground: #F4FCFB;`: the leading `--` and trailing `;` are removed before
+saving. Existing pipe-separated lists, bare color values, and JSON imports
+remain supported.
+
 ## Keyboard shortcuts
 
 Hold **Ctrl** to show the key for each available shortcut beside its label.
@@ -19,14 +35,22 @@ background shortcuts work at that time.
 
 In the Grid panel and the color refinement panel's web colors, the arrow keys
 move between swatches, Home and End jump to the start or end of a row, and
-Ctrl+Home or Ctrl+End jump to the first or last swatch. The refinement sliders
-change by one step with the arrow keys.
+Ctrl+Home or Ctrl+End jump to the first or last swatch. In the Grid panel,
+Ctrl+Shift with an arrow also moves one cell in that direction and previews it.
+That shortcut focuses the grid first, so it works when focus is on another control.
+The refinement sliders change by one step with the arrow keys.
+
+The Windows app draws a circular magnification lens around the pointer while
+sampling. Arrow keys move one pixel, Shift plus an arrow jumps ten, Enter or
+click confirms, and Escape or right-click cancels. Close Windows Magnifier if
+the lens cannot start.
 
 | Shortcut | Action |
 | --- | --- |
 | Ctrl+Shift+P | Open the Pick panel and focus the start of Live preview |
 | Ctrl+Shift+H | Open the Harmony panel |
 | Ctrl+Shift+G | Open the Grid panel and focus its current-pair cell |
+| Ctrl+Shift+Arrow | In the Grid panel, focus the grid, move one cell that way, and preview it |
 | Ctrl+Shift+M | Open the My Colors panel |
 | Ctrl+Shift+F | Select the foreground color |
 | Ctrl+Shift+B | Select the background color |
@@ -72,10 +96,22 @@ npm run build:windows
 npm run package:msix
 ```
 
-MSIX packaging requires Windows PowerShell through WSL. On Windows, you can run
-[scripts/package-msix.ps1](./scripts/package-msix.ps1) directly with `-SourceDir`
-pointing to a built app and `-SourceTarget x86_64-pc-windows-msvc` for a native
-MSVC build.
+`npm run package:msix` uses the version in `package.json`. Pass a version or output
+folder when you need a different package identity:
+
+```bash
+npm run package:msix -- --version 1.2.3
+npm run package:msix -- --tag latest
+npm run package:msix -- v1.2.3
+```
+
+A version may be `1.2.3`, `1.2.3.0`, or `v1.2.3`. The MSIX package version is the
+four-part form, and that is also the default output folder. `--tag` changes only
+the folder name. On Windows, pass the same values to
+[scripts/package-msix.ps1](./scripts/package-msix.ps1) as `-PackageVersion` and
+`-Tag`, with `-SourceDir` pointing to a built app and `-SourceTarget
+x86_64-pc-windows-msvc` for a native MSVC build. MSIX packaging requires Windows
+PowerShell through WSL.
 
 Packages use the Store identity in [identity.json](./identity.json) and are written
 to `releases/msix/<version>/` (`releases/msix/latest/` on the CI runner).
@@ -94,19 +130,20 @@ separate workflow.
 Git tags do not change app or package versions, and GitHub Releases do not
 automatically update Partner Center.
 
-1. Increase the version in `package.json`, `src-tauri/tauri.conf.json`, and
-   `src-tauri/Cargo.toml` together, and synchronize both lockfiles. Update the
-   defaults in `scripts/package-msix.sh` and `scripts/package-msix.ps1` to the
-   corresponding four-part MSIX version when packaging locally.
+1. Increase the version in `package.json` only. Keep it as `major.minor.patch`.
+   `npm version <version> --no-git-tag-version` updates `package.json` and
+   `package-lock.json` together. The Tauri config reads that version; packaging
+   scripts do not store a default version.
 2. Commit and push the changes to `main`, then create and push a matching `v*`
-   tag. For app version `1.3.7`, use tag `v1.3.7`; the workflow builds MSIX
-   version `1.3.7.0`. Do not move an existing release tag.
+   tag, such as `v` plus the `package.json` version. The workflow builds the MSIX
+   version by appending `.0`. Do not move an existing release tag.
 3. Wait for the tagged **Windows MSIX build** to succeed. Download its
    **Contrast21-msix** artifact or the MSIX from the corresponding GitHub Release.
 4. In Partner Center, create or edit the app's submission and upload
    `Contrast21_windows_x64.msix`. Verify that the displayed package version is
-   `1.3.7.0`, complete any capability declarations (including `runFullTrust`),
-   and submit the update for certification and publication.
+   the `package.json` version plus `.0`, complete any capability declarations
+   (including `runFullTrust`), and submit the update for certification and
+   publication.
 
 The package uses the reserved Store identity. Its self-signed certificate is for
 sideload testing; Microsoft signs packages distributed through the Store.
