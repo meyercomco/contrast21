@@ -41,9 +41,8 @@ That shortcut focuses the grid first, so it works when focus is on another contr
 The refinement sliders change by one step with the arrow keys.
 
 The Windows app draws a circular magnification lens around the pointer while
-sampling. Arrow keys move one pixel, Shift plus an arrow jumps ten, Enter or
-click confirms, and Escape or right-click cancels. Close Windows Magnifier if
-the lens cannot start.
+sampling. Click to select a color or right-click to cancel. Close Windows
+Magnifier if the lens cannot start.
 
 | Shortcut | Action |
 | --- | --- |
@@ -105,9 +104,13 @@ npm run package:msix -- --tag latest
 npm run package:msix -- v1.2.3
 ```
 
-A version may be `1.2.3`, `1.2.3.0`, or `v1.2.3`. The MSIX package version is the
-four-part form, and that is also the default output folder. `--tag` changes only
-the folder name. On Windows, pass the same values to
+A version may be `1.2.3`, `1.2.3.0`, or `v1.2.3`. The MSIX manifest version is
+always `major.minor.patch.0`, and that is also the default output folder.
+Partner Center rejects any other revision, so `1.2.3.4` is not a package version
+and both packaging scripts refuse it. `--tag` changes only the folder name; it
+does not change the manifest version. To publish another Store package, increase
+the patch number (for example `1.2.4`, packaged as `1.2.4.0`). Do not put a build
+count in the fourth component. On Windows, pass the same values to
 [scripts/package-msix.ps1](./scripts/package-msix.ps1) as `-PackageVersion` and
 `-Tag`, with `-SourceDir` pointing to a built app and `-SourceTarget
 x86_64-pc-windows-msvc` for a native MSVC build. MSIX packaging requires Windows
@@ -133,7 +136,9 @@ automatically update Partner Center.
 1. Increase the version in `package.json` only. Keep it as `major.minor.patch`.
    `npm version <version> --no-git-tag-version` updates `package.json` and
    `package-lock.json` together. The Tauri config reads that version; packaging
-   scripts do not store a default version.
+   scripts do not store a default version. The Store package version is that
+   value plus `.0`. Never pass a non-zero fourth component, such as
+   `--version 1.3.8.3`: Partner Center rejects it before certification.
 2. Commit and push the changes to `main`, then create and push a matching `v*`
    tag, such as `v` plus the `package.json` version. The workflow builds the MSIX
    version by appending `.0`. Do not move an existing release tag.
@@ -151,6 +156,11 @@ The separate Public Trust signing workflow is not required for this MSIX Store
 submission. Do not upload the `.cer`, installer script, or whole artifact ZIP.
 Every changed Store package needs a new, higher manifest version; renaming the
 file or rebuilding the same version does not resolve a package identity conflict.
+The manifest `Version` must be `major.minor.build.0`. Partner Center package
+acceptance fails when the revision is anything else, including `1.3.8.3`.
+Windows will still install that package for sideload, but it cannot be submitted.
+If `1.3.8.0` is already published, the next submission is a higher build number
+such as `1.3.9.0`, not `1.3.8.1`.
 
 **Linux desktop**
 
@@ -161,3 +171,4 @@ npm run tauri -- build --config src-tauri/tauri.linux.conf.json
 ```
 
 The Debian package is written under `src-tauri/target/release/bundle/deb/`.
+
