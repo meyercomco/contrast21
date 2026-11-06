@@ -1,5 +1,25 @@
 # Changelog
 
+## Unreleased
+
+- Correct the Windows eyedropper’s floating swatch and hex label, which had red and blue reversed. Use the same COLORREF conversion as the selected color.
+- Remove unreliable arrow-key pointer movement and its help text. Use click to select a color and right-click to cancel.
+
+## 1.3.9 - 2026-11-05
+
+### Improved
+
+- Use Windows' built-in lens scaling instead of the custom pixel-copy callback implicated in picker crashes. Keep the cursor-following lens, color label, crosshair, and keyboard controls.
+- Read the live color through a GDI-owned bitmap and sample the final selection after hiding the lens.
+- Preserve the working overlay bitmap if a DPI resize allocation fails, and check bitmap selection errors.
+- Remove the unused pixel-grid command, superseded Pick panel, inactive session editing methods, unused icons, and unused fonts. Existing saved palette data is left intact.
+- Add Windows development checks and regression coverage for color ordering and overlay drawing bounds.
+
+### Windows release
+
+- Reject MSIX package versions whose revision is not 0. Partner Center accepts only `major.minor.patch.0`; increase the patch number to publish another package.
+- Microsoft Store MSIX package version 1.3.9.0.
+
 ## 1.3.8 - 2026-11-04
 
 ### Improved
@@ -68,3 +88,5 @@
 - Includes a Windows x64 application and MSI installer built from Ubuntu.
 - Requires Microsoft Edge WebView2. Keep `WebView2Loader.dll` beside the standalone executable.
 - Builds are unsigned; installation, launch, upgrade, and uninstall still require verification on Windows.
+
+
