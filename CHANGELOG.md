@@ -1,9 +1,18 @@
 # Changelog
 
-## Unreleased
+## 1.4.0 - 2026-11-05
+
+### Fixed
 
 - Correct the Windows eyedropper’s floating swatch and hex label, which had red and blue reversed. Use the same COLORREF conversion as the selected color.
+
+### Changed
+
 - Remove unreliable arrow-key pointer movement and its help text. Use click to select a color and right-click to cancel.
+
+### Windows release
+
+- Microsoft Store MSIX package version 1.4.0.0.
 
 ## 1.3.9 - 2026-11-05
 
