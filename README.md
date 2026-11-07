@@ -2,9 +2,12 @@
 
 Contrast 21 helps you choose foreground and background colors that work together
 and meet WCAG contrast requirements. Sample and refine colors, explore accessible
-palettes, and keep your own color collections nearby. A unique feature
-is a color swath generator that previews colors with your brand colors, and
-snaps to contrast safe colors.
+palettes, and export your collections for scss. Contrast 21 also allows you
+explore pallets using a color wheel and algorithms , and to snap to contrast
+requirements, with your brand colors.
+
+Built with React and Tauri, it runs as a browser interface or a desktop app.
+Your saved colors stay on your device; no account or server is required.
 
 Built with React and Tauri, it runs as a browser interface or a desktop app.
 Your saved colors stay on your device; no account or server is required.
@@ -96,53 +99,44 @@ For a local build from Ubuntu/WSL, install Rust and MinGW, then run:
 npm run package:msix
 ```
 
-The script builds the Windows EXE and WebView2 loader, then packages them. It uses
-the version in `package.json`. The MSIX manifest version is always
-`major.minor.patch.0`, and that is also the default output folder, for example
-`releases/msix/1.4.1.0/`. Partner Center rejects any other revision, so
-`1.2.3.4` is not a package version and the packaging script refuses it. To publish
-another Store package, increase the patch number (for example `1.2.4`, packaged as
-`1.2.4.0`). Do not put a build count in the fourth component. MSIX packaging
-requires Windows PowerShell through WSL.
+The script builds the Windows EXE and WebView2 loader, then packages them. It
+needs Windows PowerShell through WSL. It uses the version in `package.json`.
 
-Packages use the Store identity in [identity.json](./identity.json) and are written
-to `releases/msix/<version>.0/` locally (`releases/msix/latest/` on the CI runner).
-The MSIX filename is always `Contrast21_windows_x64.msix`, and the Actions download
-is `Contrast21-msix.zip`, including for tagged builds. The package version remains
-in the MSIX manifest and `release.json`; the sideload certificate is named
-`Contrast21_sideload.cer`. For sideload installation, extract the package files
-together and run `Install-Contrast21.cmd`. Microsoft Edge WebView2 must already be
-installed. These builds use a self-signed sideload certificate. Microsoft re-signs
-packages accepted by the Store, so no CA signing certificate is needed for Store
+The Store version is always `major.minor.patch.0`. The last `.0` is required by
+Partner Center. It is not another patch. `1.4.1` in `package.json` is already
+the patch, and the package is `1.4.1.0`, written to `releases/msix/1.4.1.0/`.
+If that package needs a fix, the Store does not expect `1.4.1.1`. Partner Center
+rejects a non-zero fourth number, and the packaging script refuses it. Raise the
+patch instead: `1.4.2` is packaged as `1.4.2.0`.
+
+Packages use the Store identity in [identity.json](./identity.json). Local output
+is `releases/msix/<version>.0/`; CI writes `releases/msix/latest/`. The file is
+always `Contrast21_windows_x64.msix`. The Actions download is
+`Contrast21-msix.zip`. Sideload builds include a self-signed
+`Contrast21_sideload.cer`. Extract the files together and run
+`Install-Contrast21.cmd`. Microsoft Edge WebView2 must already be installed.
+The Store re-signs accepted packages, so no CA certificate is needed for
 submission.
 
 ### Update the Microsoft Store listing
 
-Git tags do not change app or package versions, and GitHub Releases do not
-automatically update Partner Center.
+Tags and GitHub Releases do not update Partner Center.
 
-1. Increase the patch number in `package.json` only (for example `1.4.1` to
-   `1.4.2`). Keep it as `major.minor.patch`. `npm version 1.4.2 --no-git-tag-version`
-   updates `package.json` and `package-lock.json` together. The Tauri config reads
-   that version. The Store package version is that value plus `.0`.
-2. Commit and push the changes to `main`, then create and push a matching `v*`
-   tag, such as `v` plus the `package.json` version. The workflow builds the MSIX
-   version by appending `.0`. Do not move an existing release tag.
-3. Wait for the tagged **Windows MSIX build** to succeed. Download its
-   **Contrast21-msix** artifact or the MSIX from the corresponding GitHub Release.
-4. In Partner Center, create or edit the app's submission and upload
-   `Contrast21_windows_x64.msix`. Verify that the displayed package version is
-   the `package.json` version plus `.0`, complete any capability declarations
-   (including `runFullTrust`), and submit the update for certification and
-   publication.
+1. Raise the patch in `package.json` only, for example `1.4.1` to `1.4.2`.
+   Keep `major.minor.patch`. `npm version 1.4.2 --no-git-tag-version` updates
+   `package.json` and `package-lock.json`. Tauri reads that version. The Store
+   version is that value plus `.0`, so the package after `1.4.1.0` is `1.4.2.0`,
+   not `1.4.1.1`.
+2. Commit and push to `main`, then push a matching tag such as `v1.4.2`. Do not
+   move an existing tag.
+3. After the tagged Windows MSIX build succeeds, download
+   `Contrast21_windows_x64.msix` from the artifact or GitHub Release.
+4. In Partner Center, upload that MSIX. Confirm the version is the
+   `package.json` version plus `.0`, declare capabilities including
+   `runFullTrust`, and submit.
 
-Do not upload the `.cer`, installer script, or whole artifact ZIP. Every changed
-Store package needs a new, higher manifest version; renaming the file or
-rebuilding the same version does not resolve a package identity conflict. The
-manifest `Version` must be `major.minor.build.0`. Partner Center package
-acceptance fails when the revision is anything else, including `1.3.8.3`.
-If `1.3.8.0` is already published, the next submission is a higher build number
-such as `1.3.9.0`, not `1.3.8.1`.
+Do not upload the `.cer`, installer script, or artifact ZIP. Rebuilding or
+renaming the same version does not replace a published package.
 
 **Linux desktop**
 
