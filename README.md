@@ -86,59 +86,45 @@ The output is in `dist/`. Use `npm run preview` to try the built interface local
 The [Windows MSIX workflow](./.github/workflows/msix-latest.yml) builds on pushes
 to `main`. Download **Contrast21-msix** from a successful run's **Artifacts**
 section. Pushed `v*` tags also publish a GitHub Release when the tagged commit is
-in `main` history and its version matches the app.
+in `main` history and its version matches the app. A tagged release then runs the
+[public sync workflow](./.github/workflows/public-sync.yml), which copies the
+public documentation and tags to the public repository.
 
-For a local build from Ubuntu/WSL, install Rust, MinGW, and wixl, then run:
+For a local build from Ubuntu/WSL, install Rust and MinGW, then run:
 
 ```bash
-npm run build:windows
 npm run package:msix
 ```
 
-`npm run package:msix` uses the version in `package.json`. Pass a version or output
-folder when you need a different package identity:
-
-```bash
-npm run package:msix -- --version 1.2.3
-npm run package:msix -- --tag latest
-npm run package:msix -- v1.2.3
-```
-
-A version may be `1.2.3`, `1.2.3.0`, or `v1.2.3`. The MSIX manifest version is
-always `major.minor.patch.0`, and that is also the default output folder.
-Partner Center rejects any other revision, so `1.2.3.4` is not a package version
-and both packaging scripts refuse it. `--tag` changes only the folder name; it
-does not change the manifest version. To publish another Store package, increase
-the patch number (for example `1.2.4`, packaged as `1.2.4.0`). Do not put a build
-count in the fourth component. On Windows, pass the same values to
-[scripts/package-msix.ps1](./scripts/package-msix.ps1) as `-PackageVersion` and
-`-Tag`, with `-SourceDir` pointing to a built app and `-SourceTarget
-x86_64-pc-windows-msvc` for a native MSVC build. MSIX packaging requires Windows
-PowerShell through WSL.
+The script builds the Windows EXE and WebView2 loader, then packages them. It uses
+the version in `package.json`. The MSIX manifest version is always
+`major.minor.patch.0`, and that is also the default output folder, for example
+`releases/msix/1.4.1.0/`. Partner Center rejects any other revision, so
+`1.2.3.4` is not a package version and the packaging script refuses it. To publish
+another Store package, increase the patch number (for example `1.2.4`, packaged as
+`1.2.4.0`). Do not put a build count in the fourth component. MSIX packaging
+requires Windows PowerShell through WSL.
 
 Packages use the Store identity in [identity.json](./identity.json) and are written
-to `releases/msix/<version>/` (`releases/msix/latest/` on the CI runner).
+to `releases/msix/<version>.0/` locally (`releases/msix/latest/` on the CI runner).
 The MSIX filename is always `Contrast21_windows_x64.msix`, and the Actions download
-is `Contrast21-msix.zip`, including for tagged builds. Neither filename includes
-`latest` or a version. The package version remains in the MSIX manifest and
-`release.json`; the sideload certificate is named `Contrast21_sideload.cer`.
-For sideload installation, extract the package files together and run
-`Install-Contrast21.cmd`. Microsoft Edge WebView2 must already be installed.
-These builds use self-signed sideload certificates, not Public Trust signing;
-the [signed Windows release guide](./docs/windows-signed-releases.md) covers that
-separate workflow.
+is `Contrast21-msix.zip`, including for tagged builds. The package version remains
+in the MSIX manifest and `release.json`; the sideload certificate is named
+`Contrast21_sideload.cer`. For sideload installation, extract the package files
+together and run `Install-Contrast21.cmd`. Microsoft Edge WebView2 must already be
+installed. These builds use a self-signed sideload certificate. Microsoft re-signs
+packages accepted by the Store, so no CA signing certificate is needed for Store
+submission.
 
 ### Update the Microsoft Store listing
 
 Git tags do not change app or package versions, and GitHub Releases do not
 automatically update Partner Center.
 
-1. Increase the version in `package.json` only. Keep it as `major.minor.patch`.
-   `npm version <version> --no-git-tag-version` updates `package.json` and
-   `package-lock.json` together. The Tauri config reads that version; packaging
-   scripts do not store a default version. The Store package version is that
-   value plus `.0`. Never pass a non-zero fourth component, such as
-   `--version 1.3.8.3`: Partner Center rejects it before certification.
+1. Increase the patch number in `package.json` only (for example `1.4.1` to
+   `1.4.2`). Keep it as `major.minor.patch`. `npm version 1.4.2 --no-git-tag-version`
+   updates `package.json` and `package-lock.json` together. The Tauri config reads
+   that version. The Store package version is that value plus `.0`.
 2. Commit and push the changes to `main`, then create and push a matching `v*`
    tag, such as `v` plus the `package.json` version. The workflow builds the MSIX
    version by appending `.0`. Do not move an existing release tag.
@@ -150,15 +136,11 @@ automatically update Partner Center.
    (including `runFullTrust`), and submit the update for certification and
    publication.
 
-The package uses the reserved Store identity. Its self-signed certificate is for
-sideload testing; Microsoft signs packages distributed through the Store.
-The separate Public Trust signing workflow is not required for this MSIX Store
-submission. Do not upload the `.cer`, installer script, or whole artifact ZIP.
-Every changed Store package needs a new, higher manifest version; renaming the
-file or rebuilding the same version does not resolve a package identity conflict.
-The manifest `Version` must be `major.minor.build.0`. Partner Center package
+Do not upload the `.cer`, installer script, or whole artifact ZIP. Every changed
+Store package needs a new, higher manifest version; renaming the file or
+rebuilding the same version does not resolve a package identity conflict. The
+manifest `Version` must be `major.minor.build.0`. Partner Center package
 acceptance fails when the revision is anything else, including `1.3.8.3`.
-Windows will still install that package for sideload, but it cannot be submitted.
 If `1.3.8.0` is already published, the next submission is a higher build number
 such as `1.3.9.0`, not `1.3.8.1`.
 
