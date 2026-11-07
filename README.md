@@ -9,9 +9,6 @@ requirements, with your brand colors.
 Built with React and Tauri, it runs as a browser interface or a desktop app.
 Your saved colors stay on your device; no account or server is required.
 
-Built with React and Tauri, it runs as a browser interface or a desktop app.
-Your saved colors stay on your device; no account or server is required.
-
 ## Import My Colors
 
 In **My Colors**, enter one `color name: #hex` per line, then select **Import**:
@@ -74,6 +71,43 @@ Open http://127.0.0.1:1420. Run `npm test` to check the tests.
 For the desktop app, install the [Tauri prerequisites](https://v2.tauri.app/start/prerequisites/)
 and run `npm run tauri -- dev`.
 
+## Languages
+
+The interface supports English, Spanish, French, German, Brazilian Portuguese,
+Simplified Chinese, Japanese, Korean, Hindi, and Arabic. Arabic uses a
+right-to-left layout, including matching color slider direction.
+
+Use **Language** in the tools rail to switch immediately. Languages are listed
+in their native names. Your choice is saved on your device. **System default**
+follows your browser or system language preferences, including browser language
+changes while the app is open. Unsupported languages fall back to English.
+Chinese variants use Simplified Chinese; Portuguese variants use Brazilian Portuguese.
+Your saved color names remain as you entered them.
+
+### Maintaining translations
+
+The interface is translated with [i18next](https://www.i18next.com/) and
+[react-i18next](https://react.i18next.com/). English (`src/locales/en.json`) is the
+authoritative source. Each other language has one JSON file in `src/locales/`, with the
+same nested keys.
+
+Language choice resolves in this order: a saved explicit selection, then the first
+supported entry in the system or browser languages (regional variants match their base
+language, so `es-MX` uses Spanish and `pt-PT` uses Brazilian Portuguese), then English.
+Users can change the language in the selector in the tab rail.
+
+To add a language:
+
+1. Copy `src/locales/en.json` to `src/locales/<code>.json` and translate every value. Keep
+   the keys, `{{placeholders}}`, and `<kbd>` tags unchanged. Plural groups use CLDR
+   categories for that language (check them with `new Intl.PluralRules('<code>').resolvedOptions().pluralCategories`).
+2. Import it into `dictionaries` in `src/i18n/languages.ts`. Native language names come
+   from `Intl.DisplayNames`; i18next handles regional matching and text direction.
+3. Run `npm test`. Locale tests check key parity, placeholders, and all required plural forms.
+
+Keep translation keys stable and do not put translated text in internal identifiers,
+storage keys, or color data.
+
 ## Build
 
 **Browser interface**
@@ -122,9 +156,10 @@ submission.
 
 Tags and GitHub Releases do not update Partner Center.
 
-1. Raise the patch in `package.json` only, for example `1.4.1` to `1.4.2`.
+1. Raise the patch version, for example `1.4.1` to `1.4.2`.
    Keep `major.minor.patch`. `npm version 1.4.2 --no-git-tag-version` updates
-   `package.json` and `package-lock.json`. Tauri reads that version. The Store
+   `package.json` and `package-lock.json`. Also update the app crate version in
+   `src-tauri/Cargo.toml` and `src-tauri/Cargo.lock`. Tauri reads the package version. The Store
    version is that value plus `.0`, so the package after `1.4.1.0` is `1.4.2.0`,
    not `1.4.1.1`.
 2. Commit and push to `main`, then push a matching tag such as `v1.4.2`. Do not
