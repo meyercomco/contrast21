@@ -1,5 +1,12 @@
 # Changelog
 
+## 1.4.1 - 2026-11-06
+
+### Improved
+
+- Draw the Windows eyedropper's hex label with anti-aliased Consolas text instead of the blocky built-in bitmap font.
+- Add a thin grid over the Windows eyedropper lens, aligned to the magnified source pixels, to make it easier to pick a specific pixel.
+
 ## 1.4.0 - 2026-11-05
 
 ### Fixed
