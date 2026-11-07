@@ -1,5 +1,28 @@
 # Changelog
 
+## 1.4.2 - 2026-11-07
+
+### Added
+
+- Support English, Spanish, French, German, Brazilian Portuguese, Simplified Chinese, Japanese, Korean, Hindi, and Arabic throughout the interface.
+- Choose a language from the tools rail or follow the system language, with the selection saved on your device.
+- Support right-to-left layout for Arabic and translated control labels, help text, and plural messages.
+
+### Fixed
+
+- Follow browser language changes while System default is selected, and use the browser's primary language when its preference list is empty.
+- Align color slider gradients with right-to-left slider behavior.
+- Identify language names for screen readers and avoid duplicate initialization listeners.
+
+### Changed
+
+- Use i18next for locale matching and text direction, and Intl.DisplayNames for native language names. Adding a language requires one JSON dictionary and one registration entry.
+- Check every required plural form in translation tests.
+
+### Windows release
+
+- Microsoft Store MSIX package version 1.4.2.0.
+
 ## 1.4.1 - 2026-11-06
 
 ### Improved
