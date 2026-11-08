@@ -107,7 +107,7 @@
 ### Windows release
 
 - The Microsoft Store MSIX is the default Windows package. Build it with `npm run package:msix`.
-- Package identity matches the reserved Store app, Contrast 21 - Accessibility Color Checker.
+- Package identity matches the reserved Store app, Contrast21 - Accessibility Color Checker.
 
 ## 1.1 - 2026-10-28
 
