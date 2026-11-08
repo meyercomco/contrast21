@@ -1,5 +1,20 @@
 # Changelog
 
+## 1.4.3 - 2026-11-07
+
+### Added
+
+- Translated Microsoft Store descriptions and application titles in all ten language dictionaries.
+
+### Fixed
+
+- Remember light, dark, or system appearance across application launches and initialize colors using the saved preference.
+- Use Contrast21 consistently in application branding and update the page title to match the selected language.
+
+### Windows release
+
+- Microsoft Store MSIX package version 1.4.3.0.
+
 ## 1.4.2 - 2026-11-07
 
 ### Added
