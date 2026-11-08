@@ -1,5 +1,15 @@
 # Changelog
 
+## 1.4.4 - 2026-11-07
+
+### Fixed
+
+- Accept Windows CRLF and Unix LF line endings in the Rust lockfile version check so Windows release builds can pass the test step.
+
+### Windows release
+
+- Microsoft Store MSIX package version 1.4.4.0.
+
 ## 1.4.3 - 2026-11-07
 
 ### Added
