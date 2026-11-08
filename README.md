@@ -1,10 +1,18 @@
-# Contrast 21 - Accessible Color Checker
+# Contrast21 - Accessible Color Checker
 
-Contrast 21 helps you choose foreground and background colors that work together
-and meet WCAG contrast requirements. Sample and refine colors, explore accessible
-palettes, and export your collections for scss. Contrast 21 also allows you
-explore pallets using a color wheel and algorithms , and to snap to contrast
-requirements, with your brand colors.
+Contrast21 helps you explore color combinations and build palettes for your projects, with tools to sample screen colors, refine foreground and background pairs, and check their WCAG contrast ratios.
+
+- Generate palettes of 5–7 colors using a color wheel and a choice of color harmony algorithms.
+- Optionally adjust palette colors to meet WCAG AA or AAA contrast thresholds against your selected foreground or background.
+- Preview palette colors against your preferred foreground or background as you work.
+- Sample screen colors with a magnifying eyedropper and check foreground and background contrast against WCAG AA and AAA requirements.
+- Refine color pairs in a contrast grid of lighter and darker variations.
+- Import, name, save, and copy color collections.
+- Undo, redo, and revisit previous color selections.
+- Choose light, dark, or system appearance.
+- Select your preferred interface language.
+
+Saved colors stay on your device. No account is required.
 
 Built with React and Tauri, it runs as a browser interface or a desktop app.
 Your saved colors stay on your device; no account or server is required.
