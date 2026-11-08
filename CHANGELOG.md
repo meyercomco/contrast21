@@ -1,5 +1,20 @@
 # Changelog
 
+## 1.4.5 - 2026-11-07
+
+### Added
+
+- Collect translated Microsoft Store titles and descriptions for all ten languages in LISTINGS.md.
+- Add two application screenshots.
+
+### Improved
+
+- Show English language names beside native names in the language chooser, preserving native capitalization and isolating text direction for Arabic.
+
+### Windows release
+
+- Microsoft Store MSIX package version 1.4.5.0.
+
 ## 1.4.4 - 2026-11-07
 
 ### Fixed
