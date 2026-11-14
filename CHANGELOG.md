@@ -1,6 +1,6 @@
 # Changelog
 
-## Unreleased
+## 1.5.0 - 2026-11-13
 
 ### Added
 
@@ -9,23 +9,25 @@
 ### Improved
 
 - Simplify the color input placeholder text from "Color..." to "Color" in English and Spanish translations.
+- Place color count, minimum contrast, and Regenerate together beneath the Harmony color wheel; remove redundant section headings.
+- Show the Harmony palette beside the wheel on medium and larger panels with wrapping swatches, and above the contrast palettes on smaller panels with matching scaled columns.
+- Display hex codes below Harmony swatches and on a separate line beneath bottom-aligned sample text inside foreground and background contrast swatches.
+- Remove trailing colons from minimum contrast labels in all ten languages.
+- Place Harmony controls beside the color wheel while keeping the brightness slider below it; use equal-width harmony choices, with two columns when space permits.
+- Keep the Harmony palette to the right when space permits and below the wheel otherwise; display each swatch label on one line with the lock first and any contrast badge after the ratio.
 
 ### Fixed
 
+- Spread Harmony color-wheel markers around the selected hue instead of stacking extra swatches under the pointer.
 - Show the swap colors button on small screens, where it was previously hidden.
 - Let hue and saturation sliders respond in the color refinement panel when white or black is selected, instead of staying stuck at 0.
 - Keep saturation steady while moving the lightness slider instead of shifting as the color is rounded to hex.
 - Remove the horizontal scrollbar from the color refinement panel by keeping slider thumbs inside their tracks.
 - Fix the Regenerate button in Harmony panel to produce truly random color variations instead of repeating in a fixed 4-step cycle.
 
-### Improved
+### Windows release
 
-- Place color count, minimum contrast, and Regenerate together beneath the Harmony color wheel; remove the harmony-type choices and redundant section headings.
-- Show the Harmony palette beside the wheel on medium and larger panels with wrapping swatches, and above the contrast palettes on smaller panels with matching scaled columns.
-- Display hex codes below Harmony swatches and on a separate line beneath bottom-aligned sample text inside foreground and background contrast swatches.
-- Remove trailing colons from minimum contrast labels in all ten languages.
-- Place Harmony controls beside the color wheel while keeping the brightness slider below it; use equal-width harmony choices, with two columns when space permits.
-- Keep the Harmony palette to the right when space permits and below the wheel otherwise; display each swatch label on one line with the lock first and any contrast badge after the ratio.
+- Microsoft Store MSIX package version 1.5.0.0.
 
 ## 1.4.5 - 2026-11-07
 
