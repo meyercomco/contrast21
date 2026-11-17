@@ -1,5 +1,19 @@
 # Changelog
 
+## 1.6.0 - 2026-11-16
+
+### Improved
+
+- Color controls adapt to narrow screens, keeping action icons together and moving the swap button beside the background card when the cards stack.
+- Color tuner, copy, and picker actions are arranged consistently; passing AA and AAA badges use checkmarks.
+- Harmony regeneration moves the wheel selection by 8–15% of a turn and preserves locked colors.
+- Harmony palette tooltips are shorter, selected swatches have a subtler border, and English panel help explains palette selection and importing.
+- Keyboard navigation, focus indicators, dialog handling, and screen reader feedback are more accessible.
+
+### Changed
+
+- Harmony contrast headings no longer show or lock the reference color; they follow the active foreground or background.
+
 ## 1.5.1 - 2026-11-14
 
 ### Improved
